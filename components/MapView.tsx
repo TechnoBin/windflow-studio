@@ -10,7 +10,7 @@ type Props={center:[number,number];direction:number;speed:number;playing:boolean
 type Particle={x:number;y:number;age:number;life:number;velocity:number};
 
 export default function MapView({center,direction,speed,playing,mode,rainProbability,rainMm,cyclonePoints,selectedDate}:Props){
- const host=useRef<HTMLDivElement>(null),map=useRef<L.Map|null>(null),layers=useRef<Record<BaseLayer,L.TileLayer>>({}),latest=useRef({direction,speed,playing,mode,rainProbability,rainMm});
+ const host=useRef<HTMLDivElement>(null),map=useRef<L.Map|null>(null),layers=useRef<Partial<Record<BaseLayer,L.TileLayer>>>({}),latest=useRef({direction,speed,playing,mode,rainProbability,rainMm});
  const [baseLayer,setBaseLayer]=useState<BaseLayer>('light');
  useEffect(()=>{latest.current={direction,speed,playing,mode,rainProbability,rainMm}},[direction,speed,playing,mode,rainProbability,rainMm]);
  useEffect(()=>{
@@ -49,7 +49,7 @@ export default function MapView({center,direction,speed,playing,mode,rainProbabi
   return()=>{cancelAnimationFrame(raf);observer.disconnect();m.remove();map.current=null;layers.current={};};
   // eslint-disable-next-line react-hooks/exhaustive-deps
  },[]);
- useEffect(()=>{const m=map.current,layer=layers.current[baseLayer];if(!m||!layer)return;Object.values(layers.current).forEach(item=>{if(m.hasLayer(item))m.removeLayer(item)});layer.addTo(m);},[baseLayer]);
+ useEffect(()=>{const m=map.current,layer=layers.current[baseLayer];if(!m||!layer)return;Object.values(layers.current).forEach(item=>{if(item&&m.hasLayer(item))m.removeLayer(item)});layer.addTo(m);},[baseLayer]);
  useEffect(()=>{const m=map.current;if(!m)return;const track=L.layerGroup();
   if(mode==='cyclone'&&cyclonePoints.length){
    const ordered=[...cyclonePoints].sort((a,b)=>a.validTime.localeCompare(b.validTime));
