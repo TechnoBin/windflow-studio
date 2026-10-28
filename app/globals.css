@@ -28,3 +28,12 @@
 .map-shortcuts button{border:1px solid #496170;background:#101e2aee;color:#d8e8f0;border-radius:7px;padding:8px 12px;font:600 11px var(--sans);letter-spacing:.03em;cursor:pointer;box-shadow:0 3px 12px #0004}
 .map-shortcuts button:hover{background:#214052;border-color:#6dd9ed}
 @media(max-width:600px){.map-shortcuts{top:12px;right:54px}.map-shortcuts button{padding:7px 9px;font-size:10px}}
+
+
+/* Selectable hourly weather reports */
+.report-switcher{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;padding-bottom:2px}
+.report-switcher button{border:1px solid var(--line);border-radius:7px;background:#0b151f;color:#8ca2b2;padding:7px 11px;font-size:10px;transition:background .15s,border-color .15s,color .15s}
+.report-switcher button:hover{border-color:#4c7d8d;color:#dceaf1}
+.report-switcher button.active{border-color:#6dd9ed88;background:#173442;color:var(--cyan);box-shadow:inset 0 0 0 1px #6dd9ed12}
+.hour-card em{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:8px;color:#7e96a6}
+@media(max-width:760px){.report-switcher{gap:5px;margin-top:12px}.report-switcher button{padding:7px 9px;font-size:9px}.hour-card em{font-size:7px}}
