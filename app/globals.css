@@ -60,3 +60,64 @@
 
 /* Selectable date for the multi-day hourly forecast */
 .forecast-date-label{font:8px var(--mono);letter-spacing:.8px;color:#6f8798;white-space:nowrap}.forecast-date-select{max-width:175px;min-width:130px;height:32px;padding:0 28px 0 10px;border:1px solid #314958;border-radius:7px;background:#101e2a;color:#c8d9e4;font:10px var(--sans);outline:none;color-scheme:dark}.forecast-date-select:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #6dd9ed18}.forecast-date-select:disabled{opacity:.55}@media(max-width:760px){.timeline-top{align-items:flex-start}.timeline-actions{flex-wrap:wrap;justify-content:flex-end;gap:7px}.forecast-date-label{display:none}.forecast-date-select{max-width:145px;min-width:120px;height:30px;font-size:9px}.timeline-actions button{font-size:8px}}
+
+
+/* Reliable map interaction controls and date-aware cyclone information */
+.map-shell{position:absolute;inset:0;z-index:3;min-height:0}
+.map-shortcuts{top:12px;right:12px;z-index:1200;pointer-events:auto}
+.map-shortcuts button,.map-layer-shortcuts button{cursor:pointer;touch-action:manipulation;min-height:34px;border:1px solid #496170;background:#101e2aee;color:#d8e8f0;border-radius:7px;padding:7px 12px;font:600 11px var(--sans);box-shadow:0 3px 12px #0004}
+.map-shortcuts button:hover,.map-layer-shortcuts button:hover{background:#214052;border-color:var(--cyan)}
+.map-layer-shortcuts{position:absolute;top:54px;right:12px;z-index:1200;display:flex;gap:4px;padding:4px;border:1px solid #496170;border-radius:9px;background:#09131de8;box-shadow:0 3px 12px #0004;pointer-events:auto}
+.map-layer-shortcuts button{min-height:28px;padding:5px 9px;border-color:transparent;background:transparent;box-shadow:none;font-size:10px}
+.map-layer-shortcuts button.active{border-color:#6dd9ed80;background:#173442;color:var(--cyan)}
+.map-coordinates{top:96px;right:12px;z-index:5}
+.map-stage .leaflet-control-zoom{z-index:1100!important;position:relative}
+.map-stage .leaflet-control-zoom a{width:34px!important;height:34px!important;line-height:34px!important;font-size:20px!important}
+.map-stage .leaflet-bottom{z-index:1100!important}
+.cyclone-data-panel{margin-top:13px;padding:17px 18px;border:1px solid #75423e88;border-radius:12px;background:linear-gradient(125deg,#1b171b,#101821 68%);box-shadow:0 8px 24px #0002;min-width:0}
+.cyclone-data-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.cyclone-kicker{display:flex;align-items:center;gap:7px;color:#ff9e91;font:9px var(--mono);letter-spacing:1px}
+.cyclone-data-heading h3{margin:8px 0 5px;font:600 17px var(--display);color:#f1f4f6}
+.cyclone-data-heading p{margin:0;max-width:640px;font-size:11px;line-height:1.55;color:#a3b1bb}
+.cyclone-status{flex-shrink:0;padding:7px 9px;border-radius:7px;font:8px var(--mono);letter-spacing:.7px}
+.cyclone-status.has-track{color:#ffc2a8;border:1px solid #e9816970;background:#49262155}
+.cyclone-status.no-track{color:#b4c2cb;border:1px solid #52647470;background:#26334066}
+.cyclone-data-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:15px}
+.cyclone-data-stats>div{padding:10px 11px;border:1px solid #ffffff10;border-radius:8px;background:#080f17aa;min-width:0}
+.cyclone-data-stats small{display:block;color:#7e929f;font:8px var(--mono);letter-spacing:.6px}
+.cyclone-data-stats strong{display:block;margin-top:6px;color:#e2eaf0;font:500 12px var(--sans);overflow-wrap:anywhere}
+.cyclone-point-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px}
+.cyclone-point-row{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #ffffff12;border-radius:8px;background:#0a1119a8;min-width:0}
+.point-dot{flex-shrink:0;width:8px;height:8px;border-radius:50%;background:#e86c5f;box-shadow:0 0 0 3px #e86c5f22}
+.point-dot.forecast{background:#ffc18b;box-shadow:0 0 0 3px #ffc18b22}
+.cyclone-point-row>div{flex:1;min-width:0}
+.cyclone-point-row strong,.cyclone-point-row small{display:block}
+.cyclone-point-row strong{font-size:10px;color:#dce6ed}
+.cyclone-point-row small{margin-top:4px;font-size:9px;line-height:1.4;color:#8ca0ad}
+.cyclone-point-row>span:last-child{font-size:10px;color:#f0c0b6;text-align:right;white-space:nowrap}
+.cyclone-point-row>span:last-child small{font-size:8px;color:#879ba8}
+.cyclone-data-note{margin:12px 0 8px;color:#8fa0ab;font-size:10px;line-height:1.55}
+.cyclone-data-links{display:flex;flex-wrap:wrap;gap:14px}
+.cyclone-data-links a{display:inline-flex;align-items:center;gap:6px;color:#ffb1a4;font-size:10px;text-decoration:none}
+.cyclone-data-links a:hover{text-decoration:underline}
+.cyclone-source{display:block;margin-top:11px;color:#708491;font-size:9px;line-height:1.5}
+@media(max-width:760px){
+ .map-shortcuts{top:10px;right:9px;gap:4px}
+ .map-shortcuts button{min-height:32px;padding:6px 9px;font-size:10px}
+ .map-layer-shortcuts{top:49px;right:9px;gap:2px;padding:3px}
+ .map-layer-shortcuts button{min-height:27px;padding:4px 7px;font-size:9px}
+ .map-coordinates{top:84px;right:9px;gap:4px}
+ .map-coordinates span{font-size:7px;padding:4px 5px}
+ .cyclone-data-panel{padding:13px 12px}
+ .cyclone-data-heading{gap:8px}
+ .cyclone-data-heading h3{font-size:15px}
+ .cyclone-data-heading p{font-size:10px}
+ .cyclone-status{font-size:7px;padding:6px 7px;letter-spacing:.2px}
+ .cyclone-data-stats{gap:5px}
+ .cyclone-data-stats>div{padding:8px 7px}
+ .cyclone-data-stats small{font-size:7px;letter-spacing:.2px}
+ .cyclone-data-stats strong{font-size:10px}
+ .cyclone-point-list{grid-template-columns:1fr}
+ .cyclone-point-row{padding:9px}
+}
+@media(max-width:390px){.map-shortcuts button{padding:5px 7px}.map-layer-shortcuts button{padding:4px 6px}.cyclone-data-stats{grid-template-columns:1fr 1fr}.cyclone-data-stats>div:last-child{grid-column:1/-1}}
