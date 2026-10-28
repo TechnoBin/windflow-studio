@@ -10,11 +10,11 @@ export default function MapView({center,direction,speed,playing}:Props){
  useEffect(()=>{
   if(!host.current||map.current)return;
   const m=L.map(host.current,{center,zoom:4,zoomControl:false,worldCopyJump:true});map.current=m;
-  const dark=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap contributors © CARTO'});
   const street=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'});
-  const satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});
-  dark.addTo(m);
-  L.control.layers({'Dark':dark,'Street':street,'Satellite':satellite},undefined,{position:'topright',collapsed:true}).addTo(m);
+  const dark=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap contributors © CARTO'});
+  const terrain=L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors, Tiles style © Humanitarian OpenStreetMap Team'});
+  street.addTo(m);
+  L.control.layers({'Street (no key)':street,'Dark':dark,'Humanitarian':terrain},undefined,{position:'topright',collapsed:true}).addTo(m);
   L.control.zoom({position:'bottomright'}).addTo(m);
   const canvas=L.DomUtil.create('canvas','wind-canvas') as HTMLCanvasElement;
   Object.assign(canvas.style,{position:'absolute',inset:'0',pointerEvents:'none',zIndex:'450'});
