@@ -9,8 +9,12 @@ export default function MapView({center,direction,speed,playing}:Props){
  useEffect(()=>{latest.current={direction,speed,playing}},[direction,speed,playing]);
  useEffect(()=>{
   if(!host.current||map.current)return;
-  const m=L.map(host.current,{center,zoom:4,zoomControl:false,worldCopyJump:true});map.current=m;
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:18,attribution:'© OpenStreetMap contributors © CARTO'}).addTo(m);
+  const m=L.map(host.current,{center,zoom:5,zoomControl:false,worldCopyJump:true});map.current=m;
+  const dark=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap contributors © CARTO'});
+  const street=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'});
+  const satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});
+  dark.addTo(m);
+  L.control.layers({'Dark':dark,'Street':street,'Satellite':satellite},undefined,{position:'topright',collapsed:true}).addTo(m);
   L.control.zoom({position:'bottomright'}).addTo(m);
   const canvas=L.DomUtil.create('canvas','wind-canvas') as HTMLCanvasElement;
   Object.assign(canvas.style,{position:'absolute',inset:'0',pointerEvents:'none',zIndex:'450'});
