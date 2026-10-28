@@ -9,7 +9,7 @@ export default function MapView({center,direction,speed,playing}:Props){
  useEffect(()=>{latest.current={direction,speed,playing}},[direction,speed,playing]);
  useEffect(()=>{
   if(!host.current||map.current)return;
-  const m=L.map(host.current,{center,zoom:5,zoomControl:false,worldCopyJump:true});map.current=m;
+  const m=L.map(host.current,{center,zoom:4,zoomControl:false,worldCopyJump:true});map.current=m;
   const dark=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap contributors © CARTO'});
   const street=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'});
   const satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});
