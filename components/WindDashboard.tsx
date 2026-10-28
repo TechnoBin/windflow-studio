@@ -17,14 +17,15 @@ export default function WindDashboard(){
  const choose=(p:typeof places[number])=>{setCenter([p.lat,p.lon]);setPlace(p.name+', '+p.country);setQuery(p.name);setSearchOpen(false)};
  const filtered=useMemo(()=>places.filter(p=>(p.name+' '+p.country).toLowerCase().includes(query.toLowerCase())),[query]);
  const hourly=forecast?.hourly;
- const index=hourly?Math.min(Math.max(0,hour),hourly.time.length-1):0;
+ const currentIndex=hourly&&forecast?.current.time?Math.max(0,hourly.time.indexOf(forecast.current.time)):0;
+ const index=hourly?Math.min(currentIndex+Math.max(0,hour),hourly.time.length-1):0;
  const speed=hourly?.wind_speed_10m[index]??forecast?.current.wind_speed_10m??14;
  const direction=hourly?.wind_direction_10m[index]??forecast?.current.wind_direction_10m??285;
  const temp=hourly?.temperature_2m[index]??forecast?.current.temperature_2m;
  const humidity=hourly?.relative_humidity_2m[index]??forecast?.current.relative_humidity_2m;
  const shown=units==='km/h'?Math.round(speed):Math.round(speed/3.6*10)/10;
  const cardinal=(d:number)=>['N','NE','E','SE','S','SW','W','NW'][Math.round(d/45)%8];
- const visibleHours=hourly?.time.slice(0,24)??[];
+ const visibleHours=hourly?.time.slice(currentIndex,currentIndex+24)??[];
  return <main className="app-shell"><header className="topbar"><a className="brand" href="#"><span className="brand-mark"><Wind size={22}/></span><span>windflow<span className="brand-dot">.</span><small>ATMOSPHERIC INTELLIGENCE</small></span></a><div className="top-center"><i className="live-dot"/> LIVE CONDITIONS <span className="top-separator">/</span> GLOBAL WIND MAP</div><div className="top-actions"><span className="status-pill"><i/> WEATHER FEED</span><button className="top-link" onClick={()=>setUnits(units==='km/h'?'m/s':'km/h')}>{units}⌄</button></div></header>
  <div className="workspace"><aside className="sidebar"><div className="eyebrow">FIELD OBSERVATION <span>01 / 04</span></div><div className="sidebar-head"><h1>Wind, in<br/><em>motion.</em></h1><p>Live atmospheric flow and hourly conditions.</p></div>
  <div className="section-label"><span>01</span> LOCATION</div><div className="search-wrap"><Search size={16}/><input value={query} placeholder="Search a city…" onChange={e=>{setQuery(e.target.value);setSearchOpen(true)}} onFocus={()=>setSearchOpen(true)}/></div>{searchOpen&&query&&<div className="search-results">{filtered.map(p=><button key={p.name} onClick={()=>choose(p)}><MapPin size={14}/><span>{p.name}<small>{p.country}</small></span></button>)}</div>}
