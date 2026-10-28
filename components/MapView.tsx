@@ -66,7 +66,7 @@ export default function MapView({center,direction,speed,playing,mode,rainProbabi
   // eslint-disable-next-line react-hooks/exhaustive-deps
  },[]);
  useEffect(()=>{const m=map.current;if(!m)return;const layer=L.layerGroup();if(mode==='cyclone'){const alertArea=L.circle([16.1,82.3],{radius:145000,color:'#ff796b',weight:2,opacity:.9,fillColor:'#ff796b',fillOpacity:.12,dashArray:'7 7'});const label=L.marker([16.1,82.3],{icon:L.divIcon({className:'cyclone-map-label',html:'<span>⚠ CYCLONE ALERT AREA</span>',iconSize:[150,26],iconAnchor:[75,42]})});layer.addLayer(alertArea);layer.addLayer(label);layer.addTo(m)}return()=>{layer.remove();}},[mode]);
- useEffect(()=>{map.current?.setView(center,map.current.getZoom(),{animate:true})},[center]);
+ useEffect(()=>{if(!map.current)return;if(mode==='cyclone'){map.current.setView([16.1,82.3],5,{animate:true})}else{map.current.setView(center,map.current.getZoom(),{animate:true})}},[center,mode]);
  return <div className="map-shell">
   <div className="map-shortcuts">
    <button type="button" onClick={()=>map.current?.setView([22,10],2,{animate:true})}>World</button>
