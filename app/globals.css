@@ -15,3 +15,11 @@
 .refresh-button:hover{color:var(--cyan);border-color:#6dd9ed66}
 .error-note button{border:1px solid #744c4b;background:#281c20;color:#f3b2a7;border-radius:5px;padding:4px 7px;font-size:10px}
 @media(max-width:760px){.hourly-strip{margin-right:-12px;padding-right:12px}.hour-card{flex-basis:61px;min-width:61px}.timeline-note{margin-top:10px}}
+
+/* Map layers, local clock and extra forecast metrics */
+.leaflet-control-layers{border:1px solid #344957!important;border-radius:8px!important;background:#101e2aee!important;color:#c5d7e4!important;box-shadow:0 4px 15px #0005!important}
+.leaflet-control-layers-toggle{filter:invert(.86) hue-rotate(155deg);background-color:#101e2a!important}
+.leaflet-control-layers-expanded{padding:10px 12px!important;font:11px var(--sans)!important}
+.leaflet-control-layers label{margin:5px 0!important}
+.clock-inline{display:inline-flex;align-items:center;gap:4px;margin-left:8px;color:#6dd9ed;white-space:nowrap}
+@media(max-width:760px){.clock-inline{margin-left:3px}.metrics-grid{gap:8px}.mini-metric>span{font-size:7px}.mini-metric>strong{font-size:23px}}
