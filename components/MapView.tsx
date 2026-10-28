@@ -3,11 +3,11 @@ import {useEffect,useRef} from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 type HazardMode='wind'|'rain'|'cyclone';
-type Props={center:[number,number];direction:number;speed:number;playing:boolean;mode:HazardMode;rainProbability:number};
+type Props={center:[number,number];direction:number;speed:number;playing:boolean;mode:HazardMode;rainProbability:number;rainMm:number};
 type Particle={x:number;y:number;age:number;life:number;velocity:number};
-export default function MapView({center,direction,speed,playing,mode,rainProbability}:Props){
- const host=useRef<HTMLDivElement>(null),map=useRef<L.Map|null>(null),latest=useRef({direction,speed,playing,mode,rainProbability});
- useEffect(()=>{latest.current={direction,speed,playing,mode,rainProbability}},[direction,speed,playing,mode,rainProbability]);
+export default function MapView({center,direction,speed,playing,mode,rainProbability,rainMm}:Props){
+ const host=useRef<HTMLDivElement>(null),map=useRef<L.Map|null>(null),latest=useRef({direction,speed,playing,mode,rainProbability,rainMm});
+ useEffect(()=>{latest.current={direction,speed,playing,mode,rainProbability,rainMm}},[direction,speed,playing,mode,rainProbability]);
  useEffect(()=>{
   if(!host.current||map.current)return;
   const m=L.map(host.current,{center:[22,10],zoom:2,zoomControl:false,worldCopyJump:true});map.current=m;
@@ -28,12 +28,12 @@ export default function MapView({center,direction,speed,playing,mode,rainProbabi
    if(!latest.current.playing){ctx.clearRect(0,0,w,h);return;}
    const wind=latest.current,base=(wind.direction+180)*Math.PI/180,drift=Math.min(3.4,.45+wind.speed/19),heat=Math.min(1,wind.speed/45);
    if(wind.mode==='rain'){
-    const intensity=Math.max(.25,Math.min(1,wind.rainProbability/100));
-    ctx.save();ctx.strokeStyle='rgba(137,205,255,'+(.25+intensity*.55)+')';ctx.lineWidth=1;
-    for(let i=0;i<Math.floor(90+intensity*280);i++){
-     const x=(i*73+t*(.13+intensity*.23))%(w+40)-20;
-     const y=(i*127+t*(.55+intensity*.75))%(h+55)-25;
-     ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-5-intensity*3,y+12+intensity*8);ctx.stroke();
+    const intensity=Math.max(.08,Math.min(1,wind.rainMm/12));
+    ctx.save();ctx.strokeStyle='rgba(137,205,255,'+(.18+intensity*.65)+')';ctx.lineWidth=1;
+    for(let i=0;i<Math.floor(28+intensity*390);i++){
+     const x=(i*73+t*(.10+intensity*.25))%(w+40)-20;
+     const y=(i*127+t*(.40+intensity*1.1))%(h+55)-25;
+     ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-5-intensity*3,y+8+intensity*15);ctx.stroke();
     }
     ctx.restore();
    }else{
