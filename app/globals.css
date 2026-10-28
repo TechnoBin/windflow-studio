@@ -37,3 +37,23 @@
 .report-switcher button.active{border-color:#6dd9ed88;background:#173442;color:var(--cyan);box-shadow:inset 0 0 0 1px #6dd9ed12}
 .hour-card em{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:8px;color:#7e96a6}
 @media(max-width:760px){.report-switcher{gap:5px;margin-top:12px}.report-switcher button{padding:7px 9px;font-size:9px}.hour-card em{font-size:7px}}
+
+
+/* Animated weather-hazard layers */
+.hazard-switcher{display:flex;flex-wrap:wrap;gap:7px;margin:-5px 0 13px}
+.hazard-switcher button{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:#101923;color:#9bb0bf;font-size:10px}
+.hazard-switcher button:hover{border-color:#53788a;color:#d9e9f1}
+.hazard-switcher button.active{background:#173442;border-color:#6dd9ed88;color:var(--cyan)}
+.hazard-switcher button:last-child.active{background:#3a211f;border-color:#ff796b99;color:#ffaaa0}
+.hazard-badge{border-color:#ff796b70;background:#211312ed}
+.hazard-pulse{width:7px;height:7px;display:inline-block;border-radius:50%;background:#ff796b;box-shadow:0 0 0 0 #ff796b90;animation:hazard-pulse 1.6s infinite}
+@keyframes hazard-pulse{0%{box-shadow:0 0 0 0 #ff796b80}70%{box-shadow:0 0 0 9px #ff796b00}100%{box-shadow:0 0 0 0 #ff796b00}}
+.cyclone-report{position:absolute;z-index:6;right:16px;bottom:16px;width:min(330px,calc(100% - 32px));padding:14px;border:1px solid #ff796b70;border-radius:10px;background:#1a1112ed;box-shadow:0 12px 32px #0006;backdrop-filter:blur(10px)}
+.cyclone-report-title{display:flex;align-items:center;gap:7px;color:#ff9b90;font:9px var(--mono);letter-spacing:.65px}
+.cyclone-report>strong{display:block;margin-top:9px;font:600 13px var(--display);color:#f4e6e4}
+.cyclone-report p{font-size:10px;line-height:1.55;color:#c1a9a7;margin:8px 0 11px}
+.cyclone-report a{display:inline-flex;align-items:center;gap:6px;color:#ffb0a4;font-size:10px;text-decoration:none}
+.cyclone-report a:hover{text-decoration:underline}
+.cyclone-map-label{background:transparent;border:0}
+.cyclone-map-label span{display:inline-block;padding:5px 7px;border:1px solid #ff796b90;border-radius:5px;background:#261615ed;color:#ffd4cc;font:8px var(--mono);white-space:nowrap;box-shadow:0 3px 12px #0006}
+@media(max-width:760px){.hazard-switcher{gap:6px;margin:-4px 0 10px}.hazard-switcher button{flex:1;padding:9px 7px;font-size:9px;gap:5px}.cyclone-report{right:10px;bottom:10px;width:min(290px,calc(100% - 20px));padding:11px}.cyclone-report>strong{font-size:12px}.cyclone-report p{font-size:9px}.map-legend{bottom:11px}.map-side-actions{bottom:64px}}
