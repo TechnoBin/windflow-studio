@@ -2,11 +2,12 @@
 import {useEffect,useRef} from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-type Props={center:[number,number];direction:number;speed:number;playing:boolean};
+type HazardMode='wind'|'rain'|'cyclone';
+type Props={center:[number,number];direction:number;speed:number;playing:boolean;mode:HazardMode;rainProbability:number};
 type Particle={x:number;y:number;age:number;life:number;velocity:number};
-export default function MapView({center,direction,speed,playing}:Props){
- const host=useRef<HTMLDivElement>(null),map=useRef<L.Map|null>(null),latest=useRef({direction,speed,playing});
- useEffect(()=>{latest.current={direction,speed,playing}},[direction,speed,playing]);
+export default function MapView({center,direction,speed,playing,mode,rainProbability}:Props){
+ const host=useRef<HTMLDivElement>(null),map=useRef<L.Map|null>(null),latest=useRef({direction,speed,playing,mode,rainProbability});
+ useEffect(()=>{latest.current={direction,speed,playing,mode,rainProbability}},[direction,speed,playing,mode,rainProbability]);
  useEffect(()=>{
   if(!host.current||map.current)return;
   const m=L.map(host.current,{center:[22,10],zoom:2,zoomControl:false,worldCopyJump:true});map.current=m;
@@ -26,26 +27,45 @@ export default function MapView({center,direction,speed,playing}:Props){
    ctx.globalCompositeOperation='destination-in';ctx.fillStyle='rgba(0,0,0,.91)';ctx.fillRect(0,0,w,h);ctx.globalCompositeOperation='source-over';
    if(!latest.current.playing){ctx.clearRect(0,0,w,h);return;}
    const wind=latest.current,base=(wind.direction+180)*Math.PI/180,drift=Math.min(3.4,.45+wind.speed/19),heat=Math.min(1,wind.speed/45);
-   for(const p of particles){
-    if(p.age++>p.life||p.x<0||p.x>w||p.y<0||p.y>h){Object.assign(p,seed());continue;}
-    const ox=p.x,oy=p.y;
-    // Smooth, spatially varying curl gives the flow a field-like appearance rather than parallel lines.
-    const nx=p.x/Math.max(w,1),ny=p.y/Math.max(h,1);
-    const curl=(Math.sin(nx*8.5+ny*4.2)+Math.cos(ny*10.2-nx*3.7))*.24;
-    const gust=Math.sin(t*.00035+nx*12+ny*5)*.10;
-    const angle=base+curl+gust;
-    p.x+=Math.cos(angle)*drift*p.velocity;
-    p.y-=Math.sin(angle)*drift*p.velocity;
-    const alpha=(1-p.age/p.life)*(.38+heat*.48);
-    ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(p.x,p.y);
-    ctx.strokeStyle='rgba('+Math.round(78+heat*115)+','+Math.round(195-heat*40)+','+Math.round(226-heat*70)+','+alpha+')';
-    ctx.lineWidth=.65+heat*.75;ctx.stroke();
+   if(wind.mode==='rain'){
+    const intensity=Math.max(.25,Math.min(1,wind.rainProbability/100));
+    ctx.save();ctx.strokeStyle='rgba(137,205,255,'+(.25+intensity*.55)+')';ctx.lineWidth=1;
+    for(let i=0;i<Math.floor(90+intensity*280);i++){
+     const x=(i*73+t*(.13+intensity*.23))%(w+40)-20;
+     const y=(i*127+t*(.55+intensity*.75))%(h+55)-25;
+     ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-5-intensity*3,y+12+intensity*8);ctx.stroke();
+    }
+    ctx.restore();
+   }else{
+    for(const p of particles){
+     if(p.age++>p.life||p.x<0||p.x>w||p.y<0||p.y>h){Object.assign(p,seed());continue;}
+     const ox=p.x,oy=p.y;
+     const nx=p.x/Math.max(w,1),ny=p.y/Math.max(h,1);
+     const curl=(Math.sin(nx*8.5+ny*4.2)+Math.cos(ny*10.2-nx*3.7))*.24;
+     const gust=Math.sin(t*.00035+nx*12+ny*5)*.10;
+     const angle=base+curl+gust;
+     p.x+=Math.cos(angle)*drift*p.velocity;p.y-=Math.sin(angle)*drift*p.velocity;
+     const alpha=(1-p.age/p.life)*(.38+heat*.48);
+     ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(p.x,p.y);
+     ctx.strokeStyle='rgba('+Math.round(78+heat*115)+','+Math.round(195-heat*40)+','+Math.round(226-heat*70)+','+alpha+')';
+     ctx.lineWidth=.65+heat*.75;ctx.stroke();
+    }
+   }
+   if(wind.mode==='cyclone'){
+    const point=m.latLngToContainerPoint([16.1,82.3]),cx=point.x,cy=point.y;
+    const radius=Math.max(18,Math.min(105,26+m.getZoom()*8));
+    ctx.save();ctx.lineWidth=2;ctx.strokeStyle='rgba(255,118,105,.8)';ctx.fillStyle='rgba(255,105,92,.10)';
+    ctx.beginPath();ctx.arc(cx,cy,radius*(1.05+.06*Math.sin(t*.003)),0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.setLineDash([5,6]);ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,cy,radius*1.55,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    for(let arm=0;arm<3;arm++){ctx.beginPath();for(let s=0;s<=90;s++){const a=s/90*Math.PI*4+t*.001*(arm%2?1:-1)+arm*Math.PI*2/3,rr=radius*(.08+s/90*.9);const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;if(s===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle='rgba(255,150,128,.72)';ctx.lineWidth=2;ctx.stroke()}
+    ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fillStyle='#fff1e8';ctx.fill();ctx.restore();
    }
   };
   resize();m.on('resize',resize);m.on('moveend',resize);const observer=new ResizeObserver(resize);observer.observe(host.current);raf=requestAnimationFrame(animate);
   return()=>{cancelAnimationFrame(raf);observer.disconnect();m.remove();map.current=null};
   // eslint-disable-next-line react-hooks/exhaustive-deps
  },[]);
+ useEffect(()=>{const m=map.current;if(!m)return;const layer=L.layerGroup();if(mode==='cyclone'){const alertArea=L.circle([16.1,82.3],{radius:145000,color:'#ff796b',weight:2,opacity:.9,fillColor:'#ff796b',fillOpacity:.12,dashArray:'7 7'});const label=L.marker([16.1,82.3],{icon:L.divIcon({className:'cyclone-map-label',html:'<span>⚠ CYCLONE ALERT AREA</span>',iconSize:[150,26],iconAnchor:[75,42]})});layer.addLayer(alertArea);layer.addLayer(label);layer.addTo(m)}return()=>{layer.remove();}},[mode]);
  useEffect(()=>{map.current?.setView(center,map.current.getZoom(),{animate:true})},[center]);
  return <div className="map-shell">
   <div className="map-shortcuts">
