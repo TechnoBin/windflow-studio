@@ -23,3 +23,8 @@
 .leaflet-control-layers label{margin:5px 0!important}
 .clock-inline{display:inline-flex;align-items:center;gap:4px;margin-left:8px;color:#6dd9ed;white-space:nowrap}
 @media(max-width:760px){.clock-inline{margin-left:3px}.metrics-grid{gap:8px}.mini-metric>span{font-size:7px}.mini-metric>strong{font-size:23px}}
+
+.map-shortcuts{position:absolute;right:58px;top:14px;z-index:700;display:flex;gap:6px}
+.map-shortcuts button{border:1px solid #496170;background:#101e2aee;color:#d8e8f0;border-radius:7px;padding:8px 12px;font:600 11px var(--sans);letter-spacing:.03em;cursor:pointer;box-shadow:0 3px 12px #0004}
+.map-shortcuts button:hover{background:#214052;border-color:#6dd9ed}
+@media(max-width:600px){.map-shortcuts{top:12px;right:54px}.map-shortcuts button{padding:7px 9px;font-size:10px}}
