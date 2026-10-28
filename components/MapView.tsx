@@ -19,7 +19,7 @@ export default function MapView({center,direction,speed,playing,mode,rainProbabi
   L.control.zoom({position:'bottomright'}).addTo(m);
   const canvas=L.DomUtil.create('canvas','wind-canvas') as HTMLCanvasElement;
   Object.assign(canvas.style,{position:'absolute',inset:'0',pointerEvents:'none',zIndex:'450'});
-  m.getPanes().overlayPane.appendChild(canvas);
+  m.getContainer().appendChild(canvas); // Keep the animation canvas in viewport coordinates; overlayPane is transformed during zoom.
   const ctx=canvas.getContext('2d');let w=0,h=0,raf=0,last=0,particles:Particle[]=[];
   const seed=()=>({x:Math.random()*w,y:Math.random()*h,age:Math.random()*90,life:65+Math.random()*100,velocity:.65+Math.random()*1.5});
   const resize=()=>{const s=m.getSize(),dpr=Math.min(window.devicePixelRatio||1,2);w=s.x;h=s.y;canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';ctx?.setTransform(dpr,0,0,dpr,0,0);particles=Array.from({length:Math.min(1500,Math.max(250,Math.floor(w*h/600)))},seed);};
@@ -53,7 +53,7 @@ export default function MapView({center,direction,speed,playing,mode,rainProbabi
    }
    if(wind.mode==='cyclone'){
     const point=m.latLngToContainerPoint([16.1,82.3]),cx=point.x,cy=point.y;
-    const radius=Math.max(18,Math.min(105,26+m.getZoom()*8));
+    const radius=Math.max(26,Math.min(88,38+m.getZoom()*3));
     ctx.save();ctx.lineWidth=2;ctx.strokeStyle='rgba(255,118,105,.8)';ctx.fillStyle='rgba(255,105,92,.10)';
     ctx.beginPath();ctx.arc(cx,cy,radius*(1.05+.06*Math.sin(t*.003)),0,Math.PI*2);ctx.fill();ctx.stroke();
     ctx.setLineDash([5,6]);ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,cy,radius*1.55,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
@@ -65,8 +65,8 @@ export default function MapView({center,direction,speed,playing,mode,rainProbabi
   return()=>{cancelAnimationFrame(raf);observer.disconnect();m.remove();map.current=null};
   // eslint-disable-next-line react-hooks/exhaustive-deps
  },[]);
- useEffect(()=>{const m=map.current;if(!m)return;const layer=L.layerGroup();if(mode==='cyclone'){const alertArea=L.circle([16.1,82.3],{radius:145000,color:'#ff796b',weight:2,opacity:.9,fillColor:'#ff796b',fillOpacity:.12,dashArray:'7 7'});const label=L.marker([16.1,82.3],{icon:L.divIcon({className:'cyclone-map-label',html:'<span>⚠ CYCLONE ALERT AREA</span>',iconSize:[150,26],iconAnchor:[75,42]})});layer.addLayer(alertArea);layer.addLayer(label);layer.addTo(m)}return()=>{layer.remove();}},[mode]);
- useEffect(()=>{if(!map.current)return;if(mode==='cyclone'){map.current.setView([16.1,82.3],5,{animate:true})}else{map.current.setView(center,map.current.getZoom(),{animate:true})}},[center,mode]);
+ useEffect(()=>{const m=map.current;if(!m)return;const layer=L.layerGroup();if(mode==='cyclone'){const alertArea=L.circle([16.1,82.3],{radius:145000,color:'#ffb15c',weight:2,opacity:.8,fillColor:'#ff9b52',fillOpacity:.07,dashArray:'7 8'});const label=L.marker([16.1,82.3],{icon:L.divIcon({className:'cyclone-map-label',html:'<span>⚠ ILLUSTRATIVE AREA</span>',iconSize:[150,26],iconAnchor:[75,42]})});layer.addLayer(alertArea);layer.addLayer(label);layer.addTo(m)}return()=>{layer.remove();}},[mode]);
+ useEffect(()=>{if(!map.current)return;if(mode==='cyclone'){if(map.current.getZoom()<4)map.current.setView([16.1,82.3],5,{animate:true})}else{map.current.setView(center,map.current.getZoom(),{animate:true})}},[center,mode]);
  return <div className="map-shell">
   <div className="map-shortcuts">
    <button type="button" onClick={()=>map.current?.setView([22,10],2,{animate:true})}>World</button>
