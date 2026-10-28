@@ -9,7 +9,7 @@ export default function MapView({center,direction,speed,playing}:Props){
  useEffect(()=>{latest.current={direction,speed,playing}},[direction,speed,playing]);
  useEffect(()=>{
   if(!host.current||map.current)return;
-  const m=L.map(host.current,{center,zoom:4,zoomControl:false,worldCopyJump:true});map.current=m;
+  const m=L.map(host.current,{center:[22,10],zoom:2,zoomControl:false,worldCopyJump:true});map.current=m;
   const street=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'});
   const dark=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap contributors © CARTO'});
   const terrain=L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors, Tiles style © Humanitarian OpenStreetMap Team'});
@@ -47,5 +47,11 @@ export default function MapView({center,direction,speed,playing}:Props){
   // eslint-disable-next-line react-hooks/exhaustive-deps
  },[]);
  useEffect(()=>{map.current?.setView(center,map.current.getZoom(),{animate:true})},[center]);
- return <div ref={host} className="map-host" aria-label="Animated wind particle map"/>;
+ return <div className="map-shell">
+  <div className="map-shortcuts">
+   <button type="button" onClick={()=>map.current?.setView([22,10],2,{animate:true})}>World</button>
+   <button type="button" onClick={()=>map.current?.setView([22,79],4,{animate:true})}>India</button>
+  </div>
+  <div ref={host} className="map-host" aria-label="Interactive world map with animated wind particles"/>
+ </div>;
 }
