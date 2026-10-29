@@ -58,6 +58,9 @@ export default function MapView({center,direction,speed,playing,mode,rainProbabi
     marker.bindPopup('<strong>'+point.name.replace(/[<>]/g,'')+'</strong><br/>'+point.type.toUpperCase()+' · '+new Date(point.validTime).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' IST<br/>Wind: '+(point.windSpeed||'not reported')+' km/h<br/>'+(point.category||'Category not reported'));track.addLayer(marker);
    });
    track.addTo(m);
+   // Fit the viewport to the complete official track so it is not left tiny in World view.
+   const bounds=L.latLngBounds(ordered.map(point=>[point.lat,point.lon] as L.LatLngTuple));
+   if(bounds.isValid())m.fitBounds(bounds,{padding:[48,48],maxZoom:6,animate:true});
   }
   return()=>{track.remove()};
  },[mode,cyclonePoints,selectedDate]);
